@@ -4,12 +4,12 @@
 # Title:           install.sh
 # Description:     Self-contained installer for Unsloth Studio on Linux.
 # Usage:           curl -fsSL <url>/install.sh | sudo bash
-# ============================================================================== 
+# ==============================================================================
 
 set -euo pipefail
 IFS=$'\n\t'
 
-readonly DEFAULT_INSTALL_DIR="/opt/unsloth"
+readonly DEFAULT_INSTALL_DIR="/home/unsloth"
 readonly DEFAULT_SERVICE_NAME="unsloth.service"
 readonly DEFAULT_SERVICE_USER="unsloth"
 readonly DEFAULT_LOG_FILE="/var/log/unsloth_install.log"
