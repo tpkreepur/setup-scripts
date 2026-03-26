@@ -251,13 +251,25 @@ setup_service_user() {
 
 run_as_service_user() {
     local cmd="$1"
+    # UV_NO_CONFIG=1 prevents uv from reading config files outside the install
+    # directory (e.g. /home/<invoking-user>/uv.toml) which the service user
+    # cannot read, causing a Permission denied error.
+    local extra_env="HOME='$INSTALL_DIR' UV_NO_CONFIG=1 XDG_CONFIG_HOME='$INSTALL_DIR/.config'"
 
     if command -v sudo >/dev/null 2>&1; then
-        sudo -H -u "$SERVICE_USER" env HOME="$INSTALL_DIR" bash -c "$cmd"
+        sudo -H -u "$SERVICE_USER" env \
+            HOME="$INSTALL_DIR" \
+            UV_NO_CONFIG=1 \
+            XDG_CONFIG_HOME="$INSTALL_DIR/.config" \
+            bash -c "$cmd"
     elif command -v runuser >/dev/null 2>&1; then
-        runuser -u "$SERVICE_USER" -- env HOME="$INSTALL_DIR" bash -c "$cmd"
+        runuser -u "$SERVICE_USER" -- env \
+            HOME="$INSTALL_DIR" \
+            UV_NO_CONFIG=1 \
+            XDG_CONFIG_HOME="$INSTALL_DIR/.config" \
+            bash -c "$cmd"
     else
-        su -s /bin/bash "$SERVICE_USER" -c "HOME='$INSTALL_DIR' $cmd"
+        su -s /bin/bash "$SERVICE_USER" -c "$extra_env $cmd"
     fi
 }
 
