@@ -1,0 +1,18 @@
+[Unit]
+Description=Unsloth ML Studio Service
+After=network.target
+
+[Service]
+Type=simple
+User=__UNSLOTH_USER__
+Group=__UNSLOTH_USER__
+WorkingDirectory=__UNSLOTH_DIR__
+Environment="PATH=__VENV_DIR__/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=__VENV_DIR__/bin/python -m unsloth
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
