@@ -292,7 +292,9 @@ provision_virtualenv() {
     fi
 
     log_info "Installing Unsloth Python dependencies in virtual environment."
-    run_as_service_user "'$venv_dir/bin/python' -m pip install --upgrade pip uv && '$venv_dir/bin/uv' pip install unsloth"
+    # VIRTUAL_ENV must be set so that `uv pip install` knows which environment
+    # to target; without it uv errors with "No virtual environment found".
+    run_as_service_user "VIRTUAL_ENV='$venv_dir' '$venv_dir/bin/python' -m pip install --upgrade pip uv && VIRTUAL_ENV='$venv_dir' '$venv_dir/bin/uv' pip install unsloth"
 }
 
 systemd_available() {
